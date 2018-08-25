@@ -1,5 +1,5 @@
 # Data-Generators
-This is data generating tools. 
+This is a repository for data generating tools. 
 
 # Purpose
 The purpose I make this is to generate dataset more easily and effectively.
