@@ -16,3 +16,6 @@ class Image():
     
     def get_file_length(self):
         return len(self.image_names)
+
+    def get_image_name(self, idx):
+        return self.image_names[idx]

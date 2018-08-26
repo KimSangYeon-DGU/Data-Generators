@@ -1,7 +1,8 @@
 import os, cv2, argparse
 import image_loader
 import prev_box, prev_line, box
-from color import *
+from color import get_color_bgr
+import xml_generator
 
 def mouse_handler(event, x, y, flags, param):
     global PREV_BOX, PREV_LINE, PREV_BOX_DRAW, PREV_LINE_DRAW, boxer, liner, img_w, img_h, box_info, obj_name
@@ -47,7 +48,7 @@ def check_coordinates(x, y):
     return x, y
 
 def init(args):
-    global img_dir_path, box_dir_path, mode, loader, ws_name, boxer, liner, box_info, obj_names, color_names
+    global img_dir_path, box_dir_path, mode, loader, ws_name, boxer, liner, box_info, obj_names, color_names, data_generator
     print('init')
 
     datasets_path = './datasets/'
@@ -69,10 +70,19 @@ def init(args):
     obj_names = ['fire', 'person']
     color_names = {'fire':'cyan', 'person':'magenta'}
     box_info = box.Box(obj_names)
-    
+    data_generator = xml_generator.XML_Generator()
+
+def write_boxes(img_name, img_path, img_w, img_h, img_c, data_type):
+    global obj_names, box_info
+
+    box_list = box_info.get_all_boxes()
+
+    for obj in obj_names:
+        for box in box_list[obj]:                
+            data_generator.write(img_name, img_path, img_w, img_h, 3, box, obj, data_type)
 
 def run():
-    global mode, loader, ws_name, PREV_BOX, PREV_LINE, img_w, img_h, boxer, PREV_BOX_DRAW, PREV_LINE_DRAW, box_info, obj_name, obj_names
+    global mode, loader, ws_name, PREV_BOX, PREV_LINE, img_w, img_h, boxer, PREV_BOX_DRAW, PREV_LINE_DRAW, box_info, obj_name, obj_names, image_name, data_generator
     print('Run')
     
     cv2.namedWindow(ws_name, cv2.WINDOW_NORMAL)
@@ -86,7 +96,7 @@ def run():
     PREV = 81
     SPACE_BAR = 32
     BACK_SPACE = 8
-
+    ENTER = 13
     PREV_BOX = False
     PREV_LINE = True
     PREV_BOX_DRAW = False
@@ -96,6 +106,7 @@ def run():
     print('Current object name: {}'.format(obj_name))
     while True:
         image = loader.get_image(img_idx)
+        image_name = loader.get_image_name(img_idx)
         img_h, img_w = image.shape[:2]
         clone = image.copy()
         
@@ -118,6 +129,7 @@ def run():
 
         cv2.imshow(ws_name, clone)
         key = cv2.waitKey(1) & 0xff
+        
         if key == ESC:  
             break
 
@@ -137,6 +149,12 @@ def run():
         elif key == BACK_SPACE:
             print(obj_name)
             box_info.remove_box(obj_name)
+
+        elif key == ord('n'):
+            print(image_name)
+        
+        elif key == ENTER:
+            write_boxes(image_name, '/temp/path/'+image_name, img_w, img_h, 3, 'train')
 
     cv2.destroyAllWindows()
 
