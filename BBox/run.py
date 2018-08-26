@@ -76,10 +76,7 @@ def write_boxes(img_name, img_path, img_w, img_h, img_c, data_type):
     global obj_names, box_info
 
     box_list = box_info.get_all_boxes()
-
-    for obj in obj_names:
-        for box in box_list[obj]:                
-            data_generator.write(img_name, img_path, img_w, img_h, 3, box, obj, data_type)
+    data_generator.write(img_name, img_path, img_w, img_h, 3, box_list, obj_names, data_type)
 
 def run():
     global mode, loader, ws_name, PREV_BOX, PREV_LINE, img_w, img_h, boxer, PREV_BOX_DRAW, PREV_LINE_DRAW, box_info, obj_name, obj_names, image_name, data_generator
