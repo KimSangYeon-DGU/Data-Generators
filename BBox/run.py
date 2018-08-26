@@ -72,14 +72,14 @@ def init(args):
     box_info = box.Box(obj_names)
     data_generator = xml_generator.XML_Generator()
 
-def write_boxes(img_name, img_path, img_w, img_h, img_c, data_type):
+def write_boxes(img_name, img_path, dst_dir_path, img_w, img_h, img_c, data_type):
     global obj_names, box_info
 
     box_list = box_info.get_all_boxes()
-    data_generator.write(img_name, img_path, img_w, img_h, 3, box_list, obj_names, data_type)
+    data_generator.write(img_name, img_path, dst_dir_path, img_w, img_h, 3, box_list, obj_names, data_type)
 
 def run():
-    global mode, loader, ws_name, PREV_BOX, PREV_LINE, img_w, img_h, boxer, PREV_BOX_DRAW, PREV_LINE_DRAW, box_info, obj_name, obj_names, image_name, data_generator
+    global mode, loader, ws_name, PREV_BOX, PREV_LINE, img_w, img_h, boxer, PREV_BOX_DRAW, PREV_LINE_DRAW, box_info, obj_name, obj_names, image_name, data_generator, box_dir_path
     print('Run')
     
     cv2.namedWindow(ws_name, cv2.WINDOW_NORMAL)
@@ -151,7 +151,7 @@ def run():
             print(image_name)
         
         elif key == ENTER:
-            write_boxes(image_name, '/temp/path/'+image_name, img_w, img_h, 3, 'train')
+            write_boxes(image_name, '/temp/path/'+image_name, box_dir_path, img_w, img_h, 3, 'train')
 
     cv2.destroyAllWindows()
 

@@ -4,7 +4,7 @@ class XML_Generator:
     def __init__(self):
         print('Init xml generator')
 
-    def write(self, file_name, file_path, img_w, img_h, img_c, box_list, obj_names, data_type='train'):
+    def write(self, file_name, file_path, dst_dir_path, img_w, img_h, img_c, box_list, obj_names, data_type='train'):
         root = ET.Element('annotation')
         ET.SubElement(root, 'folder').text = str(data_type)
         ET.SubElement(root, 'filename').text = str(file_name)
@@ -34,7 +34,7 @@ class XML_Generator:
                 ET.SubElement(bndbox, 'ymax').text = str(box[3])
 
         tree = ET.ElementTree(root)
-        tree.write(file_name[:-4] + '.xml')
+        tree.write('{0}/{1}.xml'.format(dst_dir_path, file_name[:-4]))
         print('Write')
 
     def update(self, file_name, _tag, context):
